@@ -1,14 +1,9 @@
 FROM python:3.6.5
 
-ENV http_proxy "http://proxymwg.gva.dts.corp.local:8080"
-ENV https_proxy "http://proxymwg.gva.dts.corp.local:8080"
-ENV no_proxy=127.0.0.1,localhost,.corp.local
-
 ENV FLASK_APP="{{cookiecutter.app_package_name}}"
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV {{cookiecutter.app_package_name}}_SETTINGS="settings.cfg"
 ENV DEBIAN_FRONTEND noninteractive
-ENV REALM DTS.CORP.LOCAL
 
 RUN apt-get update && apt-get upgrade -y && apt-get clean
 
