@@ -1,0 +1,20 @@
+{
+  "package_name": "{{cookiecutter.app_package_name}}",
+  "app_name": "{{cookiecutter.app_full_name}}",
+  "app_version": "0.0.1",
+  "initializers": {
+    "flask_app": {
+      "app": {
+        "log_level": "DEBUG"
+      }
+    },
+    "mongo": {
+      "sandbox": [
+        "creds#sandbox",
+        {
+          "mongoengine_connect": true
+        }
+      ]
+    }
+  }
+}

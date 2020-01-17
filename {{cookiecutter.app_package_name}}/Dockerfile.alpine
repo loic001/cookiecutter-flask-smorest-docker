@@ -1,0 +1,42 @@
+FROM alpine:3.7
+
+ENV ALPINE_VERSION=3.7
+
+ENV http_proxy "http://proxymwg.gva.dts.corp.local:8080"
+ENV https_proxy "http://proxymwg.gva.dts.corp.local:8080"
+ENV no_proxy=127.0.0.1,localhost,.corp.local
+
+
+ENV PACKAGES="python3 ca-certificates uwsgi-python3 gcc libc-dev linux-headers python3-dev bash krb5-libs krb5 krb5-dev krb5-server libldap libressl-dev openldap-dev"
+ENV FLASK_APP="{{cookiecutter.app_package_name}}"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV {{cookiecutter.app_package_name}}_SETTINGS="settings.cfg"
+
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/testing" > /etc/apk/repositories \
+  && echo "http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/community" >> /etc/apk/repositories \
+  && echo "http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main" >> /etc/apk/repositories \
+  && apk add --no-cache $PACKAGES || \
+    (sed -i -e 's/dl-cdn/dl-4/g' /etc/apk/repositories && apk add --update --no-cache $PACKAGES) \
+  && echo "http://dl-cdn.alpinelinux.org/alpine/v$ALPINE_VERSION/main/" > /etc/apk/repositories \
+  && if [[ ! -e /usr/bin/python ]];        then ln -sf /usr/bin/python3 /usr/bin/python; fi \
+  && if [[ ! -e /usr/bin/python-config ]]; then ln -sf /usr/bin/python-config3 /usr/bin/python-config; fi \
+  && if [[ ! -e /usr/bin/idle ]];          then ln -sf /usr/bin/idle3 /usr/bin/idle; fi \
+  && if [[ ! -e /usr/bin/pydoc ]];         then ln -sf /usr/bin/pydoc3 /usr/bin/pydoc; fi \
+  && if [[ ! -e /usr/bin/easy_install ]];  then ln -sf $(ls /usr/bin/easy_install*) /usr/bin/easy_install; fi \
+  && easy_install pip \
+  && pip install --upgrade pip \
+  && if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip3 /usr/bin/pip; fi \
+  && pip install pipenv
+
+
+COPY . /app
+
+WORKDIR /app
+
+ENV PIPENV_VENV_IN_PROJECT=1
+RUN pipenv install --skip-lock
+# RUN pipenv run pip install "libs/digitools-0.1.9.dev3+gd7a6e2d.d20181212-py2.py3-none-any.whl"
+
+RUN pipenv install --skip-lock gunicorn
+
+CMD ["pipenv", "run", "gunicorn", "--bind", "0.0.0.0:8080", "{{cookiecutter.app_package_name}}:app"]

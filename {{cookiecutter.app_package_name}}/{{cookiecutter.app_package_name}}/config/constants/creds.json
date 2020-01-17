@@ -1,0 +1,8 @@
+{
+  "sandbox": {
+    "db_name": "sandbox",
+    "username": "dgt-sandbox-dev_dbadmin",
+    "password": "sfB2F+d93",
+    "hosts": ["mongodb://lnx-gva267.gva.dts.corp.local"]
+  }
+}
