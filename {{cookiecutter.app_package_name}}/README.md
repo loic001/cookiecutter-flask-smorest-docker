@@ -31,7 +31,7 @@ This project use Pipenv for the development workflow.
  - to add more python dependencies: `pipenv install mypackage` in app directory
  
  
-## Project architecture
+## Project architecture (deprecated)
 If you have some scripts that are not useful for app execution, put them in `scripts` dir. Launch them with `python -m scripts.<script_file_without_py_extension>`
 
 Flask project files are located in the `{{cookiecutter.app_package_name}}` dir and organized as follows.
@@ -65,3 +65,4 @@ MANIFEST.in
 ### Todos
 - Improve this readme
 - Write doc (this file) to deploy to docker
+- Rewrite "Project architecture"
