@@ -2,12 +2,7 @@ FROM alpine:3.7
 
 ENV ALPINE_VERSION=3.7
 
-ENV http_proxy "http://proxymwg.gva.dts.corp.local:8080"
-ENV https_proxy "http://proxymwg.gva.dts.corp.local:8080"
-ENV no_proxy=127.0.0.1,localhost,.corp.local
-
-
-ENV PACKAGES="python3 ca-certificates uwsgi-python3 gcc libc-dev linux-headers python3-dev bash krb5-libs krb5 krb5-dev krb5-server libldap libressl-dev openldap-dev"
+ENV PACKAGES="python3 ca-certificates uwsgi-python3 gcc libc-dev linux-headers python3-dev bash"
 ENV FLASK_APP="{{cookiecutter.app_package_name}}"
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV {{cookiecutter.app_package_name}}_SETTINGS="settings.cfg"
@@ -35,7 +30,6 @@ WORKDIR /app
 
 ENV PIPENV_VENV_IN_PROJECT=1
 RUN pipenv install --skip-lock
-# RUN pipenv run pip install "libs/digitools-0.1.9.dev3+gd7a6e2d.d20181212-py2.py3-none-any.whl"
 
 RUN pipenv install --skip-lock gunicorn
 
